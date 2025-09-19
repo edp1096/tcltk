@@ -15,12 +15,12 @@ jobs:
         with:
           msystem: MINGW64
           install: |
-            git 
-            mingw-w64-x86_64-toolchain 
-            make 
-            mingw-w64-x86_64-zlib 
-            mingw-w64-x86_64-minizip
+            git
+            mingw-w64-x86_64-toolchain
+            make
             mingw-w64-x86_64-pkgconf
+            mingw-w64-x86_64-zlib
+            mingw-w64-x86_64-minizip
 
       - name: Clone Tcl and Tk
         run: |
@@ -43,7 +43,7 @@ jobs:
 
       - name: Build Tk
         run: |
-          cd tk/win  
+          cd tk/win
           ./configure --enable-64bit --disable-zipfs --with-tcl=$HOME/install/lib --prefix=$HOME/install
           make -j4
           make install
@@ -57,3 +57,19 @@ jobs:
         with:
           name: tcl-tk-9.0.2-win64
           path: tcl-tk-9.0.2-win64.tar.gz
+
+      # 여기에 추가
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: tcl-tk-9.0.2-win64.tar.gz
+          tag_name: build-${{ github.run_number }}
+          name: Tcl/Tk 9.0.2 Build ${{ github.run_number }}
+          body: |
+            Automated build of Tcl/Tk 9.0.2 for Windows x64
+
+            Built with MinGW-w64 on MSYS2
+            Build number: ${{ github.run_number }}
+            Commit: ${{ github.sha }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
