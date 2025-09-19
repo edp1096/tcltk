@@ -1,0 +1,46 @@
+name: Build Tcl/Tk 9.0.2
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - name: Install MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          install: git mingw-w64-x86_64-toolchain make
+
+      - name: Checkout with submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build Tcl
+        run: |
+          cd tcl/win
+          ./configure --enable-64bit --prefix=$HOME/install
+          make -j4
+          make install
+
+      - name: Build Tk
+        run: |
+          cd tk/win  
+          ./configure --enable-64bit --with-tcl=$HOME/install/lib --prefix=$HOME/install
+          make -j4
+          make install
+
+      - name: Package Results
+        run: |
+          tar -czf tcl-tk-9.0.2-win64.tar.gz -C $HOME install/
+
+      - name: Upload Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: tcl-tk-9.0.2-win64
+          path: tcl-tk-9.0.2-win64.tar.gz
