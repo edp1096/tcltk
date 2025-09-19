@@ -56,27 +56,31 @@ jobs:
           make -j4
           make install
 
+      - name: Set padded build number
+        run: |
+          echo "PADDED_BUILD=$(printf '%03d' ${{ github.run_number }})" >> $GITHUB_ENV
+
       - name: Package Results
         run: |
-          tar -czf tcl-tk-${{ env.TCL_TK_VERSION }}-win64.tar.gz -C $HOME dist/
+          tar -czf tcl-tk-${{ env.TCL_TK_VERSION }}-build${{ env.PADDED_BUILD }}-win64.tar.gz -C $HOME dist/
 
       - name: Upload Build
         uses: actions/upload-artifact@v4
         with:
-          name: tcl-tk-${{ env.TCL_TK_VERSION }}-win64
-          path: tcl-tk-${{ env.TCL_TK_VERSION }}-win64.tar.gz
+          name: tcl-tk-${{ env.TCL_TK_VERSION }}-build${{ env.PADDED_BUILD }}-win64
+          path: tcl-tk-${{ env.TCL_TK_VERSION }}-build${{ env.PADDED_BUILD }}-win64.tar.gz
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: tcl-tk-${{ env.TCL_TK_VERSION }}-win64.tar.gz
-          tag_name: ${{ env.TCL_TK_VERSION }}-build-${{ format('{0:D4}', github.run_number) }}
-          name: Tcl/Tk ${{ env.TCL_TK_VERSION }} Build ${{ format('{0:D4}', github.run_number) }}
+          files: tcl-tk-${{ env.TCL_TK_VERSION }}-build${{ env.PADDED_BUILD }}-win64.tar.gz
+          tag_name: ${{ env.TCL_TK_VERSION }}-build-${{ env.PADDED_BUILD }}
+          name: Tcl/Tk ${{ env.TCL_TK_VERSION }} Build ${{ env.PADDED_BUILD }}
           body: |
             Automated build of Tcl/Tk ${{ env.TCL_TK_VERSION }} for Windows x64
 
             Built with MinGW-w64 on MSYS2
-            Build number: ${{ github.run_number }}
+            Build number: ${{ env.PADDED_BUILD }}
             Commit: ${{ github.sha }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
