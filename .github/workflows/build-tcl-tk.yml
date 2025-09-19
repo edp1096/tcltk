@@ -70,8 +70,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: tcl-tk-${{ env.TCL_TK_VERSION }}-win64.tar.gz
-          tag_name: ${{ env.TCL_TK_VERSION }}-build-${{ github.run_number }}
-          name: Tcl/Tk ${{ env.TCL_TK_VERSION }} Build ${{ github.run_number }}
+          tag_name: ${{ env.TCL_TK_VERSION }}-build-${{ format('{0:D4}', github.run_number) }}
+          name: Tcl/Tk ${{ env.TCL_TK_VERSION }} Build ${{ format('{0:D4}', github.run_number) }}
           body: |
             Automated build of Tcl/Tk ${{ env.TCL_TK_VERSION }} for Windows x64
 
