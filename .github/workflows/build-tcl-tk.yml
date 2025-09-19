@@ -41,20 +41,20 @@ jobs:
       - name: Build Tcl
         run: |
           cd tcl/win
-          ./configure --enable-64bit --disable-zipfs --prefix=$HOME/install
+          ./configure --enable-64bit --disable-zipfs --prefix=$HOME/dist
           make -j4
           make install
 
       - name: Build Tk
         run: |
           cd tk/win
-          ./configure --enable-64bit --disable-zipfs --with-tcl=$HOME/install/lib --prefix=$HOME/install
+          ./configure --enable-64bit --disable-zipfs --with-tcl=$HOME/dist/lib --prefix=$HOME/dist
           make -j4
           make install
 
       - name: Package Results
         run: |
-          tar -czf tcl-tk-9.0.2-win64.tar.gz -C $HOME install/
+          tar -czf tcl-tk-9.0.2-win64.tar.gz -C $HOME dist/
 
       - name: Upload Build
         uses: actions/upload-artifact@v4
