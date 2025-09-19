@@ -16,10 +16,17 @@ jobs:
           msystem: MINGW64
           install: git mingw-w64-x86_64-toolchain make
 
-      - name: Checkout with submodules
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
+      - name: Clone Tcl and Tk
+        run: |
+          git clone --depth 1 --branch core-9-0-2 https://github.com/tcltk/tcl.git
+          git clone --depth 1 --branch core-9-0-2 https://github.com/tcltk/tk.git
+
+      - name: Debug - Check directory structure
+        run: |
+          pwd
+          ls -la
+          ls -la tcl/win || echo "tcl/win not found"
+          ls -la tk/win || echo "tk/win not found"
 
       - name: Build Tcl
         run: |
