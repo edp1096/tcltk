@@ -58,7 +58,7 @@ jobs:
 
       - name: Set padded build number
         run: |
-          echo "PADDED_BUILD=$(printf '%03d' ${{ github.run_number }})" >> $GITHUB_ENV
+          echo "PADDED_BUILD=$(printf '%04d' ${{ github.run_number }})" >> $GITHUB_ENV
 
       - name: Package Results
         run: |
