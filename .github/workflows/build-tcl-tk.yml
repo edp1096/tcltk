@@ -20,6 +20,7 @@ jobs:
             make 
             mingw-w64-x86_64-zlib 
             mingw-w64-x86_64-minizip
+            mingw-w64-x86_64-pkgconf
 
       - name: Clone Tcl and Tk
         run: |
@@ -36,14 +37,14 @@ jobs:
       - name: Build Tcl
         run: |
           cd tcl/win
-          ./configure --enable-64bit --prefix=$HOME/install
+          ./configure --enable-64bit --disable-zipfs --prefix=$HOME/install
           make -j4
           make install
 
       - name: Build Tk
         run: |
           cd tk/win  
-          ./configure --enable-64bit --with-tcl=$HOME/install/lib --prefix=$HOME/install
+          ./configure --enable-64bit --disable-zipfs --with-tcl=$HOME/install/lib --prefix=$HOME/install
           make -j4
           make install
 
