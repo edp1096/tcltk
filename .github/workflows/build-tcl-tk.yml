@@ -3,6 +3,10 @@ on:
   push:
   workflow_dispatch:
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   build:
     runs-on: windows-latest
@@ -58,12 +62,11 @@ jobs:
           name: tcl-tk-9.0.2-win64
           path: tcl-tk-9.0.2-win64.tar.gz
 
-      # 여기에 추가
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: tcl-tk-9.0.2-win64.tar.gz
-          tag_name: build-${{ github.run_number }}
+          tag_name: 9.0.2-build-${{ github.run_number }}
           name: Tcl/Tk 9.0.2 Build ${{ github.run_number }}
           body: |
             Automated build of Tcl/Tk 9.0.2 for Windows x64
